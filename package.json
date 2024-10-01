@@ -6,8 +6,15 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node --env-file=.env dist/index.js",
-    "dev": "npx tsc --watch | node --watch --env-file=.env dist/index.js"
+    "dev": "npx tsc --watch | node --watch --env-file=.env dist/index.js",
+    "ts.check": "npx tsc --project tsconfig.json",
+    "add-build": "git add dist"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +24,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
+    "pre-commit": "^1.2.2",
     "typescript": "^5.6.2"
   }
 }
