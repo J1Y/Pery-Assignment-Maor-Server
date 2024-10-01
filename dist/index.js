@@ -12,6 +12,7 @@ const articleNameValidationSchema = joi_1.default.string()
     .required();
 app.get("/introduction/:articleName", async (req, res) => {
     const { articleName } = req.params;
+    const language = req.headers["accept-language"] || "en";
     const { error } = articleNameValidationSchema.validate(articleName);
     if (error) {
         res.status(400).json({
@@ -20,7 +21,7 @@ app.get("/introduction/:articleName", async (req, res) => {
         return;
     }
     try {
-        const response = await fetch(`https://en.wikipedia.org/wiki/${articleName}`);
+        const response = await fetch(`https://${language}.wikipedia.org/wiki/${articleName}`);
         if (!response.ok) {
             if (response.status === 404) {
                 res.status(404).json({
@@ -37,7 +38,10 @@ app.get("/introduction/:articleName", async (req, res) => {
         }
         const html = await response.text();
         const dom = new jsdom_1.JSDOM(html);
-        const firstParagraph = dom.window.document.getElementsByTagName("p")[1].textContent; //Note: from my testing, it is always index 1 (there is an empty paragraph at the start of every page). however, in a real project I would not do it like this as this is not future proof, changes to the site can break it.
+        //Note: it works for every article I tested it with. however, in a real project I would not do it like this as this is not future proof, changes to the site can break it.
+        const firstParagraph = Array.from(dom.window.document
+            .getElementById("mw-content-text")
+            ?.querySelector("div")?.children || []).filter((child) => child.tagName === "P" && !child.id)[1].textContent;
         if (!firstParagraph) {
             res.status(404).json({
                 error: "Could not find the first paragraph of this article",
@@ -52,6 +56,7 @@ app.get("/introduction/:articleName", async (req, res) => {
         return;
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({
             error: "Something went wrong",
         });
