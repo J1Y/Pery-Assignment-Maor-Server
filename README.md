@@ -1,5 +1,9 @@
 # Pery-Assignment-Maor-Server
 
+build with "npm run build"
+
+run with "npm run start"
+
 ## What I Would Do If I Had More Time / It Was A Serious Project?
 
 ### Multiple Cloud Environments
