@@ -9,10 +9,12 @@ const jsdom_1 = require("jsdom");
 const signupHandler_1 = require("./signupHandler");
 const validations_1 = require("./validations");
 const fetchCache_1 = require("./fetchCache");
+const cors_1 = __importDefault(require("cors"));
 //I think having this variable as a const and not as an environment variable make more sense, as this is very unlikely to change
 exports.DEFAULT_LANGUAGE = "en";
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.get("/introduction/:articleName", async (req, res) => {
     const { articleName } = req.params;
     const { error: tokenError } = validations_1.tokenValidationSchema.validate(req.headers["x-authentication"]);

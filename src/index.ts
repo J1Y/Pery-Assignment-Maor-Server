@@ -7,12 +7,14 @@ import {
   userValidationSchema,
 } from "./validations";
 import { fetchWithCache } from "./fetchCache";
+import cors from "cors";
 
 //I think having this variable as a const and not as an environment variable make more sense, as this is very unlikely to change
 export const DEFAULT_LANGUAGE = "en";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get("/introduction/:articleName", async (req, res) => {
   const { articleName } = req.params;
